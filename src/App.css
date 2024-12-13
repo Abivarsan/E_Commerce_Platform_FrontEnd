@@ -36,3 +36,24 @@
     transform: rotate(360deg);
   }
 }
+/* Scroll bar styles */
+/* Width of the scroll bar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Scroll bar track (background) */
+::-webkit-scrollbar-track {
+  background: #ffe7d9; /* Light orange-ish background for contrast */
+}
+
+/* Scroll bar handle (thumb) */
+::-webkit-scrollbar-thumb {
+  background: #f06321; /* Primary orange color */
+  border-radius: 10px; /* Smooth rounded edges */
+}
+
+/* Scroll bar handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #d8511a; /* Darker shade of orange for hover effect */
+}
