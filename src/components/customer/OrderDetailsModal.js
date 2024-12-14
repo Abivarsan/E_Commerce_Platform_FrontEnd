@@ -192,9 +192,9 @@ const OrderDetailsModal = ({ open, onClose, order }) => {
           Total Amount:{" "}
           <span style={{ color: "#f06321" }}>${order.total.toFixed(2)}</span>
         </Typography>
-        <Typography sx={{ marginBottom: 1, fontSize: "0.95rem" }}>
+        {/* <Typography sx={{ marginBottom: 1, fontSize: "0.95rem" }}>
           <strong>Address:</strong> {order.date}
-        </Typography>
+        </Typography> */}
 
         {/* Order Items */}
         <Typography
