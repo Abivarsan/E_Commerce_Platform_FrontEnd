@@ -14,10 +14,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css"; 
 import AdminCustomer from './pages/AdminCustomer';
 import AdminProductPage from './pages/AdminProductPage';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from 'react-toastify';
 
 
 function App() {
-  const [userRole, setUserRole] = useState('Admin'); 
+  const [userRole, setUserRole] = useState('tbtg'); 
 
   const renderNavbar = () => {
     if (userRole === 'Admin') {
@@ -40,6 +42,7 @@ function App() {
   };
 
   return (
+    <>
     <Router>
       {renderNavbar()}
       <Routes>
@@ -56,6 +59,17 @@ function App() {
         <Route path="/all-products" element={<AdminProductPage/>}/>
       </Routes>
     </Router>
+    <ToastContainer
+      position="top-right"
+      autoClose={3000}
+      hideProgressBar
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover/>
+      </>
   );
 }
 
