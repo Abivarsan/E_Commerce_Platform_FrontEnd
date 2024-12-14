@@ -7,15 +7,18 @@ import {
     Button,
     IconButton,
     InputAdornment,
+    CircularProgress,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link as RouterLink,Navigate } from "react-router-dom";
+import { Link as RouterLink, Navigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { set } from "date-fns";
 
 
 
@@ -29,102 +32,111 @@ const loginSchema = z.object({
 const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-        const {
+    const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm({
         resolver: zodResolver(loginSchema),
     });
-  
+    const [isLoading, setIsLoading] = useState(false);
+
+
     const onSubmit = async (data) => {
-      try {
-        const response = await axios.post(`http://10.10.27.17:8082/api/user/authenticate`, data);
-        const token = response.data;
-  
-        if (token) {
-          const decodedToken = jwtDecode(token);
-          const { userName, role } = decodedToken;
-  
-          localStorage.setItem("token", token);
-          localStorage.setItem("userName", userName);
-          localStorage.setItem("userRole", role);
-  
-          console.log("Login successful:", { userName, role });
-          const Userole=localStorage.getItem("userRole")
-  
-          // Navigate based on user role
-          if (role === "Admin") {
-            navigate("/admin");
-        } else if (role === "Delivery") {
-            navigate("/delivery");
-        } else if (role === "Customer") {
-            navigate("/customer");
-        } else {
-            navigate("/"); // Default redirect to login
+        try {
+            setIsLoading(true)
+            const response = await axios.post(`http://10.10.27.17:8082/api/user/authenticate`, data);
+            const token = response.data;
+
+            if (token) {
+                const decodedToken = jwtDecode(token);
+                const { userName, role } = decodedToken;
+
+                localStorage.setItem("token", token);
+                localStorage.setItem("userName", userName);
+                localStorage.setItem("userRole", role);
+
+                console.log("Login successful:", { userName, role });
+                const Userole = localStorage.getItem("userRole")
+                toast.success("Login successful!");
+
+
+                // Navigate based on user role
+                if (role === "Admin") {
+                    navigate("/admin");
+                } else if (role === "Delivery") {
+                    navigate("/delivery");
+                } else if (role === "Customer") {
+                    navigate("/customer");
+                } else {
+                    navigate("/"); // Default redirect to login
+                }
+            } else {
+                throw new Error("Token not found in response");
+            }
+            window.location.reload();
+            setIsLoading(false)
+
+        } catch (error) {
+            console.error("Login failed:", error);
+            alert("Login failed. Please check your credentials and try again.");
+            setIsLoading(false);
+
         }
-        } else {
-          throw new Error("Token not found in response");
-        }
-        window.location.reload(); 
-      } catch (error) {
-        console.error("Login failed:", error);
-        alert("Login failed. Please check your credentials and try again.");
-      }
     };
-  
-// const LoginPage = () => {
-//     const [showPassword, setShowPassword] = useState(false);
 
-//     const {
-//         register,
-//         handleSubmit,
-//         formState: { errors },
-//     } = useForm({
-//         resolver: zodResolver(loginSchema),
-//     });
+    // const LoginPage = () => {
+    //     const [showPassword, setShowPassword] = useState(false);
 
-//     const onSubmit = async (data) => {
-        
-//         try {
-            
-//             console.log("Login Data:", data);
+    //     const {
+    //         register,
+    //         handleSubmit,
+    //         formState: { errors },
+    //     } = useForm({
+    //         resolver: zodResolver(loginSchema),
+    //     });
 
-//             const response = await axios.post(`http://10.10.27.17:8082/api/user/authenticate`, data);
-//             console.log(response.data);
-            
+    //     const onSubmit = async (data) => {
 
-//             const  token  = response.data;
+    //         try {
 
-//             if (token) {
-//                 const decodedToken = jwtDecode(token);
-//                 const { userName, role } = decodedToken;
+    //             console.log("Login Data:", data);
 
-//                 localStorage.setItem("token", token);
-//                 localStorage.setItem("userName", userName);
-//                 localStorage.setItem("userRole", role);
+    //             const response = await axios.post(`http://10.10.27.17:8082/api/user/authenticate`, data);
+    //             console.log(response.data);
 
-//                 console.log("Login successful:", { userName, role });
-//                 const UserRole = localStorage.getItem("userRole");
 
-                    
-//                 if (UserRole === "Admin") {
-//                     return <Navigate to="/admin" />;
-//                   } else if (UserRole === "Delivery") {
-//                     return <Navigate to="/delivery" />;
-//                   } else if (UserRole === "Customer") {
-//                     return <Navigate to="/customer" />;
-//                   } else {
-//                     return <Navigate to="/" />; // Redirect to login if no role
-//                   }
-//             } else {
-//                 throw new Error("Token not found in response");
-//             }
-//         } catch (error) {
-//             console.error("Login failed:", error);
-//             alert("Login failed. Please check your credentials and try again.");
-//         }
-//     };
+    //             const  token  = response.data;
+
+    //             if (token) {
+    //                 const decodedToken = jwtDecode(token);
+    //                 const { userName, role } = decodedToken;
+
+    //                 localStorage.setItem("token", token);
+    //                 localStorage.setItem("userName", userName);
+    //                 localStorage.setItem("userRole", role);
+
+    //                 console.log("Login successful:", { userName, role });
+    //                 const UserRole = localStorage.getItem("userRole");
+
+
+    //                 if (UserRole === "Admin") {
+    //                     return <Navigate to="/admin" />;
+    //                   } else if (UserRole === "Delivery") {
+    //                     return <Navigate to="/delivery" />;
+    //                   } else if (UserRole === "Customer") {
+    //                     return <Navigate to="/customer" />;
+    //                   } else {
+    //                     return <Navigate to="/" />; // Redirect to login if no role
+    //                   }
+    //             } else {
+    //                 throw new Error("Token not found in response");
+    //             }
+    //         } catch (error) {
+    //             console.error("Login failed:", error);
+    //             alert("Login failed. Please check your credentials and try again.");
+    //         }
+    //     };
 
 
     return (
@@ -282,6 +294,8 @@ const LoginPage = () => {
                             fullWidth
                             type="submit"
                             variant="contained"
+                            disabled={isLoading}
+                            startIcon={isLoading ? <CircularProgress size="1rem" /> : null}
                             sx={{
                                 width: "90%",
                                 backgroundColor: "#f06321",

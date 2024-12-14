@@ -7,13 +7,16 @@ import {
     Button,
     IconButton,
     InputAdornment,
+    CircularProgress,
     MenuItem,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const registrationSchema = z.object({
     userName: z.string().min(3, "Username must be at least 3 characters").nonempty("Username is required"),
     password: z
@@ -33,9 +36,10 @@ const registrationSchema = z.object({
 
 const roles = ["Customer", "Delivery Person"];
 
+
 const RegistrationPage = () => {
     const [showPassword, setShowPassword] = useState(false);
-
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -43,11 +47,34 @@ const RegistrationPage = () => {
     } = useForm({
         resolver: zodResolver(registrationSchema),
     });
+    const [isLoading, setIsLoading] = useState(false);
 
-    const onSubmit = (data) => {
-        console.log("Registration Data:", data);
-        // Perform registration logic
+
+    const onSubmit = async (data) => {
+        try {
+            setIsLoading(true)
+
+            const response = await axios.post(
+                `http://10.10.27.17:8082/api/user/addUser`, data
+            );
+
+            if ( response.status === 200 || response.status === 201) {
+                // Assuming 201 for created, 200 for success
+                toast.success("Registration successful!");
+                navigate("/")
+                console.log("Registration successful:", response.data);
+            } else {
+                toast.error("Registration failed. Please try again.");
+            }
+            setIsLoading(false)
+
+        } catch (error) {
+            setIsLoading(false)
+            console.error("Error during registration:", error);
+            toast.error("Something went wrong. Please check your data and try again.");
+        }
     };
+
 
     return (
         <Grid container sx={{ height: "100vh" }}>
@@ -278,6 +305,9 @@ const RegistrationPage = () => {
                             fullWidth
                             type="submit"
                             variant="contained"
+                            disabled={isLoading}
+                            startIcon={isLoading ? <CircularProgress size="1rem" /> : null}
+
                             sx={{
                                 backgroundColor: "#f06321",
                                 "&:hover": { backgroundColor: "#d05b1c" },

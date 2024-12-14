@@ -160,6 +160,9 @@ import LoginPage from "./pages/SigninPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import ForgetPasswordPage from "./pages/ForgetPage";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
 import MyOrdersPage from "./pages/MyOrdersPage";
 function App() {
   const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
