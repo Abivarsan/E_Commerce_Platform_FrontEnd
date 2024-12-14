@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import CartDrawer from './CartDrawer'; // Import CartDrawer
+import CartDrawer from './CartDrawer'; 
+import { useNavigate } from 'react-router-dom';
 
 const NavbarCustomer = () => {
     const [openCart, setOpenCart] = useState(false);
@@ -10,7 +11,14 @@ const NavbarCustomer = () => {
     const toggleCart = () => {
         setOpenCart(!openCart);
     };
-
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userRole');
+        navigate("/");
+        window.location.reload();
+    };
+    const navigate = useNavigate();
     return (
         <div>
             <AppBar position="static" sx={{ backgroundColor: '#f06321' }}>
@@ -45,6 +53,13 @@ const NavbarCustomer = () => {
                         sx={{ fontWeight: 'bold', color: 'white' }}
                     >
                         My Cart
+                    </Button>
+                    <Button
+                        color="inherit"
+                        onClick={handleLogout}
+                        sx={{ marginLeft: 2, fontWeight: 'bold', color: 'white' }}
+                    >
+                        Logout
                     </Button>
                 </Toolbar>
             </AppBar>

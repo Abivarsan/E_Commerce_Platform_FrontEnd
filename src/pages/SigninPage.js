@@ -66,6 +66,7 @@ const LoginPage = () => {
         } else {
           throw new Error("Token not found in response");
         }
+        window.location.reload(); 
       } catch (error) {
         console.error("Login failed:", error);
         alert("Login failed. Please check your credentials and try again.");
