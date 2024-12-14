@@ -1,3 +1,4 @@
+
 // import React, { useState } from 'react';
 // import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 // import "react-toastify/dist/ReactToastify.css";
@@ -10,6 +11,7 @@
 // import CustomerProduct from './pages/CustomerProduct';
 // import OrderCustomer from './pages/OrdersCustomer';
 // import "./App.css";
+
 
 // import "slick-carousel/slick/slick.css"; 
 // import "slick-carousel/slick/slick-theme.css"; 
@@ -161,6 +163,7 @@ import ForgetPasswordPage from "./pages/ForgetPage";
 function App() {
   const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
 
+
   const renderNavbar = () => {
     switch (userRole) {
       case "Admin":
@@ -175,6 +178,7 @@ function App() {
   };
 
   return (
+    <>
     <Router>
       {renderNavbar()}
       <Routes>
@@ -200,6 +204,17 @@ function App() {
 
       </Routes>
     </Router>
+    <ToastContainer
+      position="top-right"
+      autoClose={3000}
+      hideProgressBar
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover/>
+      </>
   );
 }
 
