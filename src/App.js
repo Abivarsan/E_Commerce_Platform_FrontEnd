@@ -162,6 +162,8 @@ import ForgetPasswordPage from "./pages/ForgetPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
+import MyOrdersPage from "./pages/MyOrdersPage";
 function App() {
   const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
 
@@ -191,7 +193,12 @@ function App() {
 
         {/* Role-Based Private Routes */}
         {userRole === "Admin" && <Route path="/admin" element={<AdminHome />} />}
-        {userRole === "Delivery" && <Route path="/delivery" element={<DeliveryHome />} />}
+        {userRole === "Delivery" && 
+        <>
+                <Route path="/delivery" element={<DeliveryHome />} />
+                <Route path="/my-orders" element={<MyOrdersPage />} />
+
+                </>}
         {userRole === "Customer" && (
           <>
             <Route path="/customer" element={<CustomerHome />} />
